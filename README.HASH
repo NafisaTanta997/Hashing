@@ -1,0 +1,74 @@
+# Nafisa Tanta
+# Homework 3
+#Due date: April 13, 2021
+
+Libraries included additionally 
+<string>, <cmath>, <vector>, <algorithm>
+
+Part 1
+For Part 1, I implemented the linear_probing.h file and modified the create_and_test_hash.cc and quadratic_probing.h files.
+
+ create_and_test_hash.cc file:
+	For this file, I modified the TestFunctionForHashTable function to implement two ifstream variables to read the
+	words.txt and query_words.txt files. I designed it such that, when reading the words.txt file, the function creates
+	a hash table, placing each word in a unique location (the index is their key values) in that hash table, using the 
+	"Insert" function.
+	And so later, when the program searches for the query words from the query_words.txt file, it could simply check
+	if the previously created hash table contains the word or not (using the "Contains" function).
+	Lastly, for Part 1 in this function, it also outputs the necessary values using functions which I implemented in the 
+	quadratic_probing.h file.
+
+quadratic_probing.h file:
+	For this file, I implemented the following functions;
+	a) getTotalElements(): A getter function that returns the total number of elements in the hash table
+	b) getTableSize(): A getter function that returns the size of the hash table
+	c) getTotalCollisions(): A getter function that returns the total number of collisions "num_collisions" that occured
+	d) getTotalProbing(): A getter function which is a slightly modified version of the function "FindPos" that focuses
+	on the amount of probing that occurs when searching for a query word, and then returns the total number of 
+	probing for that word
+	And I modified the FindPos() funtion to increment the private member variable "num_collisions" whenever a 
+	collision occurs
+
+	An error I encountered in this phase was struggling to increment num_collisions in FindPos() despite it being a 
+	private member variable. To overcome this, I included the keyword "mutable" to allow my private member 
+	function, FindPos(), to modify the variable num_collisions so that I can get the correct number of collisions
+
+linear_probing.h file:
+	For this file, I implemented the HashTableLinear class based on the HashTable class which minor modifactions 
+	to the "IsPrime" and "NextPrime" function names, to avoid redefinition errors, and the getTotalProbing() and
+	FindPos() functions which now counts the amount of probing linearly
+
+Part 2
+For Part 2, I implemented the double_hashing.h file, which instantiates the HashTableDouble class. To do so, I also based this
+class on the HashTable class with slight modifications done to the "IsPrime" and "NextPrime" function names, to avoid 
+redefinition errors, and the getTotalProbing() and FindPos() functions which now counts the amount of probing in a double
+hashing format. Furthermore, I also included a setRvalue() function which sets the r value for double hashing. If the r value is 
+not given by the user, the program sets it to "7".
+
+Part 3
+For Part 3, I modified the "spell_check.cc" file so that it reads words from the document file and checks them against the 
+dictionary file. However, I ensured that before checking each word, the SpellChecker() function converts the word to an
+appropriate format. 
+For example:
+	"Climb," gets converted to "climb" before it is looked up in the dictionary file. To ensure this, I first checked if
+	there are any non alphabetical characters, if so, they are removed from the string. Then, I changed all the 
+	characters of each word to their respective lowercases (tolower()).
+	While implementing the first change, I came across an error where my code was erasing the wrong character,
+	and so to fix that issue, I readjusted the iterator if the non-alphabetical character was anywhere in the string 
+	before the last character.
+When looking up the word in the dictionary, I checked each word against all three cases using the Contains() function.
+To keep track of the valid words, I instantiated a vector<string> called alt_words, which holds all the valid alternate words
+from each case from the same incorrect word.
+An improvement I did was to instantiated the string variable "temp" within the scope of each of the cases, such that everytime
+a new word is read, temp is recreated, holding the new word. And as soon as we move onto the next case, temp is unused.
+	Case A:
+	For this case, I inserted one character (from a - z) in any position in the string then looked it up in the dictionary.
+	Even if one valid alternate word is found, it checks for all possible alternate words which are all stored in the alt_words
+	vector. 
+	Case B:
+	This is similar to removing any non-alphabetical character step I did before. So I reused the method with the 
+	added step of adding each valid word to alt_words.
+	Case C:
+	Since this method swaps two adjacent characters in the string, the for-loop's range is till the second to last character
+	in the string. And so, everytime a valid word is found, it is added to alt_words. 
+	
